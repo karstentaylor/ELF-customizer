@@ -1,63 +1,55 @@
 import React, { Component } from 'react';
-import Store from './Store';
-import Header from './Header';
-import Main from './Main';
-import Summary from './Summary';
-import Feature from './Feature';
-// Normalizes string as a slug - a string that is safe to use
-// in both URLs and html attributes
-import slugify from 'slugify';
-
 import './App.css';
-
-// This object will allow us to
-// easily convert numbers into US dollar values
-const USCurrencyFormat = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
-});
+import FEATURES from './index';
+import MainForm from './composition/MainForm';
+import MainSummary from './composition/MainSummary';
 
 class App extends Component {
-  state = { ...Store };
+  constructor(props) {
+    super(props);
+    this.state = {
+      features: FEATURES,
+      selected: {},
+    };
+    this.handleClick = this.handleClick.bind(this);
+    this.total = this.total.bind(this);
+  }
 
-  updateFeature = (feature, newValue) => {
+  handleClick(name, cost, title) {
     const selected = Object.assign({}, this.state.selected);
-    selected[feature] = newValue;
+    selected[title] = [name, cost];
+
     this.setState({
       selected,
     });
+
+    this.total();
+  }
+
+  total = () => {
+    let sum = 0;
+    Object.keys(this.state.selected).forEach((key) => {
+      sum += this.state.selected[key][1];
+    });
+    return sum;
   };
 
   render() {
-    const summary = Object.keys(this.state.selected).map((feature, idx) => {
-      const featureHash = feature + '-' + idx;
-      const selectedOption = this.state.selected[feature];
-    });
-
-    const total = Object.keys(this.state.selected).reduce(
-      (acc, curr) => acc + this.state.selected[curr].cost,
-      0
-    );
-
     return (
       <div className="App">
-        <Header />
-        <div className="Main">
-          <section>
-            <Main
-              currency={USCurrencyFormat}
-              features={features}
-              summary={summary}
-              total={total}
-            />
-          </section>
-          <Feature />
-          <Summary
-            featureHash={featureHash}
-            selectedOption={selectedOption}
-            currency={USCurrencyFormat}
+        <header role="banner">
+          <h1>ELF Computing</h1>
+          <h3>Laptops</h3>
+          <h5>Customize your laptop</h5>
+        </header>
+        <main role="main">
+          <MainForm
+            features={this.state.features}
+            selected={this.state.selected}
+            onClick={this.handleClick}
           />
-        </div>
+          <MainSummary selected={this.state.selected} total={this.total()} />
+        </main>
       </div>
     );
   }
