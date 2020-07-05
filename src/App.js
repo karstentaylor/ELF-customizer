@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-import FEATURES from './index';
+import FEATURES from './composition/Features';
 import MainForm from './composition/MainForm';
 import MainSummary from './composition/MainSummary';
 
@@ -12,7 +12,7 @@ class App extends Component {
       selected: {},
     };
     this.handleClick = this.handleClick.bind(this);
-    this.total = this.total.bind(this);
+    // this.total = this.total.bind(this);
   }
 
   handleClick(name, cost, title) {
@@ -22,17 +22,7 @@ class App extends Component {
     this.setState({
       selected,
     });
-
-    this.total();
   }
-
-  total = () => {
-    let sum = 0;
-    Object.keys(this.state.selected).forEach((key) => {
-      sum += this.state.selected[key][1];
-    });
-    return sum;
-  };
 
   render() {
     return (
@@ -48,7 +38,7 @@ class App extends Component {
             selected={this.state.selected}
             onClick={this.handleClick}
           />
-          <MainSummary selected={this.state.selected} total={this.total()} />
+          <MainSummary selected={this.state.selected} />
         </main>
       </div>
     );

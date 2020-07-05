@@ -17,7 +17,7 @@ function MainSummary(props) {
           selectedParts={props.selected}
         />
       ))}
-      <Total total={props.total} />
+      <Total selected={props.selected} />
     </section>
   );
 }

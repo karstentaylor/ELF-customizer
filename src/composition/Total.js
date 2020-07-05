@@ -1,6 +1,10 @@
 import React from 'react';
 
 function Total(props) {
+  let sum = 0;
+  Object.keys(props.selected).forEach((key) => {
+    sum += props.selected[key][1];
+  });
   return (
     <div className="summary__total">
       <div className="summary__total__label">Your Price: </div>
@@ -8,7 +12,7 @@ function Total(props) {
         {new Intl.NumberFormat('en-US', {
           style: 'currency',
           currency: 'USD',
-        }).format(props.total)}
+        }).format(sum)}
       </div>
     </div>
   );
